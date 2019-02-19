@@ -19,12 +19,12 @@ import java.util.UUID;
 public class AliyunService {
     private static final Logger logger = LoggerFactory.getLogger(AliyunService.class);
     //设置好账号的ACCESS_KEY和SECRET_KEY
-    String endpoint = "http://oss-cn-beijing.aliyuncs.com";
-    String accessKeyId  = "LTAIStsOwJcM4Cfs";
-    String accessKeySecret  = "JDyAtPp06eR8AHlF1H8AuHBlF1pKjO";
+    String endpoint = "";
+    String  accessKeyId   = "";
+    String  accessKeySecret   =  "";
     //要上传的空间
-    String bucketname = "nowcodercyx";
-    String headfilename = "http://nowcodercyx.oss-cn-beijing.aliyuncs.com";
+    String bucketname = "";
+    String headfilename = "";
 
 
     //简单上传，使用默认策略，只需要设置上传的空间名就可以了
@@ -61,7 +61,7 @@ public class AliyunService {
             if (res != null) {
                 return headfilename+"/"+fileName;
             } else {
-                logger.error("七牛异常");
+                logger.error("阿里云异常");
                 return null;
             }
         } catch (OSSException e) {
