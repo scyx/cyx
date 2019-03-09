@@ -1,5 +1,7 @@
 #parse("header.html")
-
+<div style="margin:0;position:fixed">
+    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=774169864&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:774169864:53" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+</div>
     <div id="main">
     <!--
         <div class="hero">
@@ -79,9 +81,9 @@
                         <div class="post">
                             <div class="votebar">
                                 #if ($vo.like > 0)
-                                <button class="click-like up pressed" data-id="$!{vo.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">$!{vo.news.likeCount}</span></button>
+                                <button class="click-like up pressed" data-id="$!{vo.news.id}" like-sta="$!{vo.like}" title="赞同"><i class="vote-arrow"></i><span class="count">$!{vo.news.likeCount}</span></button>
                                 #else
-                                <button class="click-like up" data-id="$!{vo.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">$!{vo.news.likeCount}</span></button>
+                                <button class="click-like up" data-id="$!{vo.news.id}" like-sta="$!{vo.like}" title="赞同"><i class="vote-arrow"></i><span class="count">$!{vo.news.likeCount}</span></button>
                                 #end
                                 #if($vo.like < 0)
                                 <button class="click-dislike down pressed" data-id="$!{vo.news.id}" title="反对"><i class="vote-arrow"></i></button>

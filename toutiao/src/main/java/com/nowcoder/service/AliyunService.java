@@ -47,6 +47,8 @@ public class AliyunService {
                 return null;
             }
             String fileExt = file.getOriginalFilename().substring(dotPos + 1).toLowerCase();
+            //通过扩展名名判断这个文件是不是图片 是否允许上传
+            //png","jpg","bmp","jpeg"都允许
             if (!ToutiaoUtil.isFileAllowed(fileExt)) {
                 return null;
             }
@@ -55,13 +57,13 @@ public class AliyunService {
             String fileName = UUID.randomUUID().toString().replaceAll("-", "") + "." + fileExt;
 
             PutObjectResult res = ossClient.putObject(bucketname, fileName, f);
-            //调用put方法上传
+            //putObject上传
             ossClient.shutdown();
             //打印返回的信息
             if (res != null) {
                 return headfilename+"/"+fileName;
             } else {
-                logger.error("七牛异常");
+                logger.error("阿里云异常");
                 return null;
             }
         } catch (OSSException e) {

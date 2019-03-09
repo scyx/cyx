@@ -5,6 +5,7 @@ import com.nowcoder.model.HostHolder;
 import com.nowcoder.model.News;
 import com.nowcoder.model.ViewObject;
 import com.nowcoder.service.LikeService;
+import com.nowcoder.service.MessageService;
 import com.nowcoder.service.NewsService;
 import com.nowcoder.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class HomeController {
     @Autowired
     LikeService likeService;
 
+    @Autowired
+    MessageService messageService;
+
     private List<ViewObject> getNews(int userId, int offset, int limit) {
         List<News> newsList = newsService.getLatestNews(userId, offset, limit);
         List<ViewObject> vos = new ArrayList<>();
@@ -54,6 +58,8 @@ public class HomeController {
                         @RequestParam(value = "pop", defaultValue = "0") int pop) {
         model.addAttribute("vos", getNews(0, 0, 20));
         if(hostHolder.getUser()!=null){
+            int num = messageService.getUnreadOnHeader(hostHolder.getUser().getId());
+            model.addAttribute("num",num);
             pop=0;
         }
         model.addAttribute("pop", pop);
@@ -61,8 +67,15 @@ public class HomeController {
     }
 
     @RequestMapping(path = {"/user/{userId}"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String userIndex(Model model, @PathVariable("userId") int userId) {
+    public String userIndex(Model model, @PathVariable("userId") int userId,
+                            @RequestParam(value = "pop", defaultValue = "0") int pop) {
         model.addAttribute("vos", getNews(userId, 0, 10));
+        if(hostHolder.getUser()!=null){
+            int num = messageService.getUnreadOnHeader(hostHolder.getUser().getId());
+            model.addAttribute("num",num);
+            pop=0;
+        }
+        model.addAttribute("pop", pop);
         return "home";
     }
 

@@ -1,7 +1,11 @@
 package com.nowcoder.controller;
 
-import com.nowcoder.model.News;
-import com.nowcoder.model.ViewObject;
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
+import com.nowcoder.dao.LoginTicketDAO;
+import com.nowcoder.dao.UserDAO;
+import com.nowcoder.model.*;
 import com.nowcoder.service.NewsService;
 import com.nowcoder.service.UserService;
 import com.nowcoder.util.ToutiaoUtil;
@@ -24,6 +28,12 @@ public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     UserService userService;
+    @Autowired
+    HostHolder hostHolder;
+    @Autowired
+    EventProducer eventProducer;
+    @Autowired
+    LoginTicketDAO loginTicketDAO;
 
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
@@ -41,6 +51,13 @@ public class LoginController {
                     cookie.setMaxAge(3600*24*5);
                 }
                 response.addCookie(cookie);
+                String ticket = map.get("ticket").toString();
+                LoginTicket loginTicket = loginTicketDAO.selectByTicket(ticket);
+                User user = userService.selectByid(loginTicket.getUserId());
+                int userId= user.getId();
+                if(user!=null){
+                    eventProducer.fireEvent(new EventModel(EventType.REGEIST).setActorId(userId));
+                }
                 return ToutiaoUtil.getJSONString(0, "注册成功");
             } else {
                 return ToutiaoUtil.getJSONString(1, map);
@@ -60,6 +77,7 @@ public class LoginController {
                         HttpServletResponse response) {
         try {
             Map<String, Object> map = userService.login(username, password);
+            logger.info("LoginController.login");
             if (map.containsKey("ticket")) {
                 Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");

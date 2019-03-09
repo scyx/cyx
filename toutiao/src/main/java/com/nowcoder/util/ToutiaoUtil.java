@@ -2,9 +2,11 @@ package com.nowcoder.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.nowcoder.controller.LoginController;
+import com.nowcoder.dao.MessageDAO;
 import com.sun.imageio.plugins.jpeg.JPEG;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.text.StyledEditorKit;
 import java.security.MessageDigest;

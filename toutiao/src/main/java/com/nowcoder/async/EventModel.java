@@ -7,6 +7,7 @@ import java.util.Map;
  * @author cyx
  * @data 2019/2/16 14:44
  */
+
 public class EventModel {
     private EventType type;
     private int actorId;
@@ -15,6 +16,10 @@ public class EventModel {
     private int entityOwnerId;
 
     private Map<String,String> exts= new HashMap<String,String>();
+
+    public EventModel(){
+
+    }
 
 
     public String getExt(String key){

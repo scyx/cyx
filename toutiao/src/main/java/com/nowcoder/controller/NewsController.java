@@ -1,14 +1,15 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProducer;
+import com.nowcoder.async.EventType;
 import com.nowcoder.model.*;
-import com.nowcoder.service.CommentService;
-import com.nowcoder.service.NewsService;
-import com.nowcoder.service.AliyunService;
-import com.nowcoder.service.UserService;
+import com.nowcoder.service.*;
 import com.nowcoder.util.ToutiaoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
@@ -40,6 +41,12 @@ public class NewsController {
     CommentService commentService;
     @Autowired
     UserService userService;
+    @Autowired
+    LikeService likeService;
+    @Autowired
+    MessageService messageService;
+    @Autowired
+    EventProducer eventProducer;
 
 
     @RequestMapping(path={"/addComment"},method = RequestMethod.POST)
@@ -58,6 +65,11 @@ public class NewsController {
             //更新news里面的评论数量
             int count= commentService.getCommentCount(comment.getEntityId(),comment.getEntityType());
             newsService.updateCommentCount(comment.getEntityId(),count);
+            int userId= newsService.selectuserIdBynewsId(newsId);
+            eventProducer.fireEvent(new EventModel(EventType.COMMENT)
+                    .setActorId(hostHolder.getUser().getId())
+                    .setEntityOwnerId(userId).setEntityId(newsId));
+
         }catch (Exception e){
             logger.error("增加评论失败"+e.getMessage());
         }
@@ -80,7 +92,7 @@ public class NewsController {
 
     }
 
-    //上传图片 采用的是七牛云服务
+    //上传图片 采用的是阿里云服务
     @RequestMapping(path = {"/uploadImage"}, method = { RequestMethod.POST})
     @ResponseBody
     public String uploadImage(@RequestParam("file")MultipartFile file){
@@ -126,6 +138,7 @@ public class NewsController {
     @RequestMapping(path={"news/{newsId}"},method = RequestMethod.GET)
     public String newsDetail(@PathVariable("newsId")int newsId, Model model){
         News news= newsService.getById(newsId);
+        int localUserId=hostHolder.getUser()!=null?hostHolder.getUser().getId():0;
         if(news!=null){
             //评论
             List<Comment> comments=commentService.getCommentsByEntity(news.getId(), EntityType.ENTITY_NEWS);
@@ -136,7 +149,15 @@ public class NewsController {
                 vo.set("user",userService.getUser(comment.getUserId()) );
                 commentVOS.add(vo);
             }
+
             model.addAttribute("comments",commentVOS);
+        }
+        if(localUserId!=0){
+            model.addAttribute("like", likeService.getLikeStatus(localUserId, EntityType.ENTITY_NEWS,news.getId()));
+            int num = messageService.getUnreadOnHeader(hostHolder.getUser().getId());
+            model.addAttribute("num",num);
+        }else{
+            model.addAttribute("like",0);
         }
         model.addAttribute("news",news);
         model.addAttribute("owner", userService.getUser(news.getUserId()));

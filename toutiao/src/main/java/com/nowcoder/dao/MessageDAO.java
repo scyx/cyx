@@ -3,10 +3,7 @@ package com.nowcoder.dao;
 import ch.qos.logback.classic.db.names.TableName;
 import com.nowcoder.model.Comment;
 import com.nowcoder.model.Message;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -36,5 +33,18 @@ public interface MessageDAO {
     @Select({"select count(id) from",TABLE_NAME,"where has_read=0 and to_id=#{userId} and conversation_id=#{conversationId}"})
     int getConversationUnreadCount(@Param("userId")int userId,
                                    @Param("conversationId")String conversationId);
+
+    @Delete({"delete from",TABLE_NAME,"where conversation_id=#{conversationId}"})
+    void deleteMessage(@Param("conversationId")String conversationId );
+
+    @Delete({"delete from",TABLE_NAME,"where id=#{id}"})
+    void deleteMessageDetailById(@Param("id")int id);
+
+    @Update({"update",TABLE_NAME,"set has_read='1' where id=#{id}"})
+    void markHasread(@Param("id")int id);
+
+
+    @Select({"select count(id) from",TABLE_NAME,"where has_read=0 and to_id=#{userId}"})
+    int getUnreadOnheader(@Param("userId")int userId );
 
 }

@@ -50,6 +50,12 @@ public class NewsService {
     }
 
     public int updateLikeCount(int id,int likeCount){
+
         return newsDAO.updateLikeCount(id,likeCount);
+    }
+
+
+    public  int selectuserIdBynewsId(int newsId){
+        return newsDAO.selectuserIdBynewsId(newsId);
     }
 }

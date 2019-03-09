@@ -32,6 +32,7 @@ public class PassportInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+        logger.info("PassportInterceptor.prehandle");
         String ticket = null;
         if (httpServletRequest.getCookies() != null) {
             for (Cookie cookie : httpServletRequest.getCookies()) {
@@ -48,7 +49,7 @@ public class PassportInterceptor implements HandlerInterceptor {
             }
             User user = userDAO.selectById(loginTicket.getUserId());
             hostHolder.setUser(user);
-            logger.info("PassportInterceptor调用了");
+           // logger.info("PassportInterceptor调用了");
         }
         return true;
     }

@@ -3,7 +3,8 @@
     $.extend(Action, {
         like: fLike,
         dislike: fDislike,
-        post: fPost
+        post: fPost,
+        delete:fdeleteletter
     });
 
     /**
@@ -19,6 +20,18 @@
         that.post({
             url: '/like',
             data: {newsId: oConf.newsId},
+            call: oConf.call,
+            error: oConf.error,
+            always: oConf.always
+        });
+    }
+
+
+    function fdeleteletter(oConf) {
+        var that = this;
+        that.post({
+            url: '/deleteletter',
+            data: {deleteid: oConf.deleteid},
             call: oConf.call,
             error: oConf.error,
             always: oConf.always

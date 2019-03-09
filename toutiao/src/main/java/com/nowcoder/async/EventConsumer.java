@@ -1,6 +1,7 @@
 package com.nowcoder.async;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.nowcoder.model.Message;
 import com.nowcoder.util.JedisAdapter;
 import com.nowcoder.util.RedisKeyUtil;
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 @Service
 public class EventConsumer implements InitializingBean, ApplicationContextAware {
-    private static final Logger logger= LoggerFactory.getLogger(EventModel.class);
+    private static final Logger logger= LoggerFactory.getLogger(EventConsumer.class);
     private Map<EventType, List<EventHandler>> config=new HashMap<EventType, List<EventHandler>>();
     private ApplicationContext applicationContext;
     @Autowired
@@ -39,14 +40,14 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
             for(Map.Entry<String,EventHandler> entry:beans.entrySet()){
                 List<EventType> eventTypes = entry.getValue().getSupportEventType();
                 for(EventType type:eventTypes){
-                    if(config.containsKey(type)){
+                    if(!config.containsKey(type)){
                         config.put(type,new ArrayList<EventHandler>());
                     }
                     config.get(type).add(entry.getValue());
                 }
             }
         }
-        Thread thread = new Thread(){
+        Thread thread = new Thread(new Runnable() {
             public void run(){
                 while(true){
                     String key= RedisKeyUtil.getEventQueueKey();
@@ -56,17 +57,18 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                             continue;
                         }
                         EventModel eventModel= JSON.parseObject(message,EventModel.class);
-                        if(!config.containsKey(eventModel)){
+                        if(!config.containsKey(eventModel.getType())){
                             logger.error("不能处理的事件" );
                             continue;
                         }
                         for(EventHandler handler:config.get(eventModel.getType())){
-                            handler.doHandle(eventModel);
+                           handler.doHandle(eventModel);
                         }
                     }
                 }
             }
-        };
+        });
+        thread.start();
     }
 
     @Override

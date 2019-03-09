@@ -24,12 +24,33 @@ public class LikeService {
         return jedisAdapter.sismember(disLikeKey,String.valueOf(userId))?-1:0;
     }
 
+    public void cancelLike(int userId,int entityType,int entityId){
+        String likeKey=RedisKeyUtil.getLikeKey(entityId,entityType);
+        jedisAdapter.srem(likeKey,String.valueOf(userId));
+    }
+
+    public void cancelDisLike(int userId,int entityType,int entityId){
+        String dislikeKey=RedisKeyUtil.getDisLikeKey(entityId,entityType);
+        jedisAdapter.srem(dislikeKey,String.valueOf(userId));
+    }
+
+
     public long like(int userId,int entityType,int entityId){
         String likeKey=RedisKeyUtil.getLikeKey(entityId,entityType);
         jedisAdapter.sadd(likeKey,String.valueOf(userId));
         String disLikeKey= RedisKeyUtil.getDisLikeKey(entityId,entityType);
         jedisAdapter.srem(disLikeKey,String.valueOf(userId));
         return jedisAdapter.scard(likeKey);
+    }
+
+    public long getNumberoflike(int entityType,int entityId){
+        String likeKey=RedisKeyUtil.getLikeKey(entityId,entityType);
+        return jedisAdapter.scard(likeKey);
+    }
+
+    public long getNumberofDislike(int entityType,int entytyId ){
+        String dislikekey = RedisKeyUtil.getDisLikeKey(entytyId,entityType);
+        return jedisAdapter.scard(dislikekey);
     }
 
 

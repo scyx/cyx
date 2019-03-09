@@ -26,7 +26,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         if (hostHolder.getUser() == null) {
             httpServletResponse.sendRedirect("/?pop=1");
-            System.out.println("LoginRequiredInterceptor调用了");
+            //System.out.println("LoginRequiredInterceptor调用了");
             return false;
         }
 

@@ -26,6 +26,9 @@ public class MessageService {
     public List<Message> getConversationDetail(String conversationId,int offset,int limit){
         return messageDAO.getConversationDetail(conversationId,offset,limit);
     }
+    public void deleteletter(String conversastionId){
+        messageDAO.deleteMessage(conversastionId);
+    }
 
 
     public List<Message> getConversationList(int UserId,int offset,int limit){
@@ -33,5 +36,17 @@ public class MessageService {
     }
      public int getConversationUnreadCount(int userId, String conversationId){
         return messageDAO.getConversationUnreadCount(userId,conversationId);
+     }
+
+     public void deleteMessageDetailById(int id){
+        messageDAO.deleteMessageDetailById(id);
+     }
+
+     public void markHasread(int markid){
+        messageDAO.markHasread(markid);
+     }
+
+     public int getUnreadOnHeader(int userId){
+        return messageDAO.getUnreadOnheader(userId);
      }
 }

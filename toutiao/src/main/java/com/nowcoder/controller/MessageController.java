@@ -59,6 +59,8 @@ public class MessageController {
             messages.add(vo);
           }
           model.addAttribute("messages",messages);
+          int num = messageService.getUnreadOnHeader(hostHolder.getUser().getId());
+          model.addAttribute("num",num);
       }catch (Exception e){
             logger.error("获取详情消息失败"+e.getMessage());
       }
@@ -78,6 +80,7 @@ public class MessageController {
             msg.setCreatedDate(new Date());
             msg.setConversationId(fromId<toId?String.format("%d_%d",fromId,toId):String.format("%d_%d",toId,fromId));
             messageService.addMessage(msg);
+
             return ToutiaoUtil.getJSONString(msg.getId());
 
         }catch (Exception e){
@@ -92,20 +95,27 @@ public class MessageController {
 
 
     @RequestMapping(path={"/msg/list"},method = RequestMethod.GET)
-    public String conversationList(Model model){
+    public String conversationList(Model model, @RequestParam(value = "pop", defaultValue = "0") int pop){
         try{
+            if(hostHolder.getUser()!=null){
+                int num = messageService.getUnreadOnHeader(hostHolder.getUser().getId());
+                model.addAttribute("num",num);
+                pop=0;
+            }
+            model.addAttribute("pop", pop);
             int localUserId=hostHolder.getUser().getId();
             List<ViewObject> conversations = new ArrayList<ViewObject>();
             List<Message> conversationList = messageService.getConversationList(localUserId,0,10);
             for(Message msg :conversationList){
                 ViewObject vo = new ViewObject();
                 vo.set("conversation",msg);
+                vo.set("id",msg.getConversationId());
                 int targetId = msg.getFromId()==localUserId?msg.getToId():msg.getFromId();
                 User user=userService.getUser(targetId);
                 vo.set("user",user);
                 vo.set("headUrl",user.getHeadUrl());
-                vo.set("userName",user.getName());
                 vo.set("userId",user.getId());
+                vo.set("name",user.getName());
                 //vo.set("targetId", targetId);
                 //vo.set("totalCount",msg.getId());
                 vo.set("unread",messageService.getConversationUnreadCount(localUserId,msg.getConversationId()));
@@ -119,5 +129,23 @@ public class MessageController {
 
         }
         return "letter";
+    }
+
+
+    @RequestMapping(path={"/deleteletter"},method = RequestMethod.POST)
+    public String Deleteletter(String deleteid){
+        messageService.deleteletter(deleteid);
+        return "letter";
+    }
+
+    @RequestMapping(path={"/deleteletterdetail"},method = RequestMethod.POST)
+    public String deleteletterdetile(int deleteid){
+        messageService.deleteMessageDetailById(deleteid);
+        return "letterDetail";
+    }
+
+    @RequestMapping(path={"/markHasread"},method = RequestMethod.POST)
+    public void markhasread(int markid){
+        messageService.markHasread(markid);
     }
 }

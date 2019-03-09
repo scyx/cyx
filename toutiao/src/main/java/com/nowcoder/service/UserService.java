@@ -105,4 +105,7 @@ public class UserService {
     public void logout(String ticket) {
         loginTicketDAO.updateStatus(ticket, 1);
     }
+    public User selectByid( int id){
+        return userDAO.selectById(id);
+    }
 }
