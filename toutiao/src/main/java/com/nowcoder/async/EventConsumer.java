@@ -34,6 +34,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
     JedisAdapter jedisAdapter;
 
     @Override
+    //项目启动的时候要注册所有的事件类型 然后来判断一个事件是否能被处理
     public void afterPropertiesSet() throws Exception {
         Map<String,EventHandler> beans=applicationContext.getBeansOfType(EventHandler.class);
         if(beans!=null){
@@ -47,6 +48,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                 }
             }
         }
+        //开个线程来不断处理队列中的事件
         Thread thread = new Thread(new Runnable() {
             public void run(){
                 while(true){
