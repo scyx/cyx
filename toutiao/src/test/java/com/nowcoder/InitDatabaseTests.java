@@ -1,10 +1,11 @@
 package com.nowcoder;
 
-import com.nowcoder.dao.CommentDAO;
-import com.nowcoder.dao.LoginTicketDAO;
-import com.nowcoder.dao.NewsDAO;
-import com.nowcoder.dao.UserDAO;
-import com.nowcoder.model.*;
+import com.toutiaozixun.ToutiaoApplication;
+import com.toutiaozixun.dao.CommentDAO;
+import com.toutiaozixun.dao.LoginTicketDAO;
+import com.toutiaozixun.dao.NewsDAO;
+import com.toutiaozixun.dao.UserDAO;
+import com.toutiaozixun.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

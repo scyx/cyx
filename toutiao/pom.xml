@@ -91,7 +91,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.nowcoder.ToutiaoApplication</mainClass>
+					<mainClass>com.toutiaozixun.ToutiaoApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
