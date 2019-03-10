@@ -37,7 +37,7 @@ public class LikeController {
 
     @Autowired
     EventProducer eventProducer;
-
+    //点赞
     @RequestMapping(path = {"/like"}, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String like(@RequestParam("newsId") int newsId) {
@@ -61,7 +61,7 @@ public class LikeController {
         }
     }
 
-
+    //点踩 注意和点赞的联系 两者冲突
     @RequestMapping(path = {"/dislike"}, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String dislike(@RequestParam("newsId") int newsId) {

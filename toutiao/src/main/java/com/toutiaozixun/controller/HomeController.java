@@ -51,7 +51,7 @@ public class HomeController {
         }
         return vos;
     }
-
+    //主页
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Model model,
                         @RequestParam(value = "pop", defaultValue = "0") int pop) {
@@ -64,7 +64,7 @@ public class HomeController {
         model.addAttribute("pop", pop);
         return "home";
     }
-
+    //用户页
     @RequestMapping(path = {"/user/{userId}"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String userIndex(Model model, @PathVariable("userId") int userId,
                             @RequestParam(value = "pop", defaultValue = "0") int pop) {

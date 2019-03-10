@@ -49,7 +49,7 @@ public class NewsController {
     @Autowired
     EventProducer eventProducer;
 
-
+    //增加评论
     @RequestMapping(path={"/addComment"},method = RequestMethod.POST)
     public String addComment(@RequestParam("newsId") int newsId,
                              @RequestParam("content")String content){

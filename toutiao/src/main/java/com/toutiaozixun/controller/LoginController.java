@@ -33,7 +33,7 @@ public class LoginController {
     EventProducer eventProducer;
     @Autowired
     LoginTicketDAO loginTicketDAO;
-
+    //注册
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String reg(Model model,
@@ -67,7 +67,7 @@ public class LoginController {
             return ToutiaoUtil.getJSONString(1, "注册异常");
         }
     }
-
+    //登录
     @RequestMapping(path = {"/login/"}, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String login(Model model, @RequestParam("username") String username,
@@ -81,7 +81,7 @@ public class LoginController {
                 Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
                 if (rememberme > 0) {
-                    cookie.setMaxAge(3600*24*5);
+                    cookie.setMaxAge(3600*24*5); //设置过期时间
                 }
                 response.addCookie(cookie);
                 return ToutiaoUtil.getJSONString(0, "登录成功");
@@ -94,7 +94,7 @@ public class LoginController {
             return ToutiaoUtil.getJSONString(1, "登录异常");
         }
     }
-
+    //登出 更新ticket状态 来达到退出用户的目的
     @RequestMapping(path = {"/logout/"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String logout(@CookieValue("ticket") String ticket) {
         userService.logout(ticket);

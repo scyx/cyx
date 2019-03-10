@@ -26,6 +26,7 @@ import java.util.List;
 /**
  * @author cyx
  * @data 2019/1/27 15:10
+    站内信有关
  */
 @Controller
 public class MessageController {
@@ -95,7 +96,7 @@ public class MessageController {
     }
 
 
-
+    //消息列表
     @RequestMapping(path={"/msg/list"},method = RequestMethod.GET)
     public String conversationList(Model model, @RequestParam(value = "pop", defaultValue = "0") int pop){
         try{
@@ -133,19 +134,19 @@ public class MessageController {
         return "letter";
     }
 
-
+    //删除站内信
     @RequestMapping(path={"/deleteletter"},method = RequestMethod.POST)
     public String Deleteletter(String deleteid){
         messageService.deleteletter(deleteid);
         return "letter";
     }
-
+    //删除具体某一条
     @RequestMapping(path={"/deleteletterdetail"},method = RequestMethod.POST)
     public String deleteletterdetile(int deleteid){
         messageService.deleteMessageDetailById(deleteid);
         return "letterDetail";
     }
-
+    //已读站内信
     @RequestMapping(path={"/markHasread"},method = RequestMethod.POST)
     public void markhasread(int markid){
         messageService.markHasread(markid);
