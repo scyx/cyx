@@ -153,6 +153,8 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
             while(true){
                 String key= RedisKeyUtil.getEventQueueKey();
                 // brpop 和 pop 区别 要用阻塞pop
+                //brpop返回的为什么是List<>类型？
+                //此处是返回一个含有两个元素的列表，第一个元素是被弹出元素所属的key，第二个元素是被弹出元素的值。
                 List<String> events = jedisAdapter.brpop(0,key);
                 for(String message:events){
                     if(message.equals(key)) {
