@@ -175,7 +175,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
         }
 }
 ```
-**EventConsumer类实现了InitializingBean, ApplicationContextAware两个接口，实现了前者是为了afterPropertiesSet()方法，凡是继承该接口的类，在bean的属性初始化后都会执行该方法，而后者是为了获取应用程序上下文。在afterPropertiesSet()方法的开始中，有一个hashmap是用来记录所有的Event处理器，
+EventConsumer类实现了InitializingBean, ApplicationContextAware两个接口，实现了前者是为了afterPropertiesSet()方法，凡是继承该接口的类，在bean的属性初始化后都会执行该方法，而后者是为了获取应用程序上下文。在afterPropertiesSet()方法的开始中，有一个hashmap是用来记录所有的Event处理器，
 ```
  也就是
  Map<String, EventHandler> beans = applicationContext.getBeansOfType(EventHandler.class);
@@ -187,10 +187,8 @@ public interface EventHandler {
     List<EventType> getSupportEventType();//关注哪些EventType 只要发生了这些EventType都要处理
 }
 ```
-**
-**
-对于一个类型，找出需要处理的所有处理器，也就是一个Map<EventType,List<EventHandler>的方式来记录下所有的type与handler的对应关系，虽然此处为一一对应，没有一个type对应多个handler的情况，但是如果业务更加复杂，就需要用List来记录所有handler，记录完之后，用线程池的方式来消费队列中的模型，注意从队列中拿出的方式应该是brpop，此时把拿出来的序列化之后的值反序列化成java对象事件模型model，然后去config这个hashmap中找到model的type对应的处理器handler，然后就可以交给处理器执行dohandle方法了，而dohandle方法就是根据model的各种属性往消息表里写一条语句，也就是发送一条站内信。至此消费者功能已经基本完成。
-**
+
+对于一个类型，找出需要处理的所有处理器，也就是一个Map<EventType,List<EventHandler>的方式来记录下所有的type与handler的对应关系，虽然此处为一一对应，没有一个type对应多个handler的情况，但是如果业务更加复杂，就需要用List来记录所有handler，记录完之后，用线程池的方式来消费队列中的模型，注意从队列中拿出的方式应该是brpop，此时把拿出来的序列化之后的值反序列化成java对象事件模型model，然后去config这个hashmap中找到model的type对应的处理器handler，然后就可以交给处理器执行dohandle方法了，而dohandle方法就是根据model的各种属性往消息表里写一条语句，也就是发送一条站内信。至此消费者功能已经基本完成
 
 ## TODO
 - 排行榜
